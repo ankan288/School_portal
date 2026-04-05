@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: #f8fafc; /* lock slate-50 as hard root */
+  --color-foreground: #0f172a; /* lock slate-900 as hard root */
+}
+
+html, body {
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background-color: var(--color-background) !important;
+  color: var(--color-foreground) !important;
+}
