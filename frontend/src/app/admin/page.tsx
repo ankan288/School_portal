@@ -12,7 +12,7 @@ export default function AdminDashboard() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [type, setType] = useState<"notice" | "image" | "video">("notice");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -39,30 +39,33 @@ export default function AdminDashboard() {
     setLoading(true);
     setSuccess(false);
 
-    let file_url = null;
+    const fileUrls: string[] = [];
 
-    if (file && (type === "image" || type === "video")) {
+    if (files.length > 0 && (type === "image" || type === "video")) {
       const bucket = type === "image" ? "images" : "videos";
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
+      
+      for (const f of files) {
+        const fileExt = f.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+        const filePath = `${user.id}/${fileName}`;
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file);
-
-      if (uploadError) {
-        console.error("Upload error:", uploadError);
-        alert(`Failed to upload ${type}: ${uploadError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      if (uploadData) {
-        const { data: publicUrlData } = supabase.storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
           .from(bucket)
-          .getPublicUrl(filePath);
-        file_url = publicUrlData.publicUrl;
+          .upload(filePath, f);
+
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          alert(`Failed to upload ${type}: ${uploadError.message}`);
+          setLoading(false);
+          return;
+        }
+
+        if (uploadData) {
+          const { data: publicUrlData } = supabase.storage
+            .from(bucket)
+            .getPublicUrl(filePath);
+          fileUrls.push(publicUrlData.publicUrl);
+        }
       }
     }
 
@@ -76,7 +79,7 @@ export default function AdminDashboard() {
       published_at: submitStatus === "published" ? new Date().toISOString() : null,
     };
 
-    if (file_url) payload.file_url = file_url;
+    if (fileUrls.length > 0) payload.file_url = fileUrls.join(',');
 
     const { error } = await supabase.from("posts").insert([payload]);
 
@@ -90,7 +93,7 @@ export default function AdminDashboard() {
       setTitle("");
       setContent("");
       setType("notice");
-      setFile(null);
+      setFiles([]);
     }
   };
 
@@ -164,20 +167,30 @@ export default function AdminDashboard() {
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-slate-700">Media Upload</label>
             <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 flex flex-col items-center justify-center text-slate-500 bg-slate-50 hover:bg-slate-100 transition cursor-pointer relative">
-              {file ? (
-                <span className="font-medium text-slate-800">{file.name}</span>
+              {files.length > 0 ? (
+                <div className="flex flex-col items-center gap-2">
+                  <span className="font-medium text-slate-800">{files.length} file(s) selected</span>
+                  <div className="text-xs text-slate-500 max-w-xs text-center truncate">
+                    {files.map(f => f.name).join(', ')}
+                  </div>
+                </div>
               ) : (
                 <>
                   <span>Click to browse or drag and drop files</span>
                   <span className="text-xs mt-1 text-slate-400">
-                    {type === "image" ? "PNG, JPG up to 10MB" : "MP4 up to 50MB"}   
+                    {type === "image" ? "PNG, JPG up to 10MB (Multiple allowed)" : "MP4 up to 50MB"}   
                   </span>
                 </>
               )}
               <input
                 type="file"
+                multiple={type === "image"}
                 accept={type === "image" ? "image/*" : "video/*"}
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setFiles(Array.from(e.target.files));
+                  }
+                }}
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
             </div>

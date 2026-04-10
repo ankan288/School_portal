@@ -65,6 +65,7 @@ export default function Feed() {
 
   useEffect(() => {
     fetchPosts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   const handleLike = async (postId: string) => {
@@ -251,15 +252,22 @@ export default function Feed() {
           </div>
 
           {/* Media */}
-          {post.file_url && post.type === "image" && (
-            <div className="relative w-full rounded-3xl overflow-hidden bg-slate-100 mt-2 border border-slate-100">
-              <img src={post.file_url} alt={post.title} className="object-cover w-full h-auto max-h-[600px]" loading="lazy" />
-            </div>
-          )}
+          {post.file_url && post.type === "image" && (() => {
+            const urls = post.file_url.split(',');
+            return (
+              <div className={`mt-2 grid gap-2 ${urls.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                {urls.map((url, i) => (
+                  <div key={i} className="relative w-full rounded-3xl overflow-hidden bg-slate-100 border border-slate-100">
+                    <img src={url} alt={`${post.title} image ${i + 1}`} className="object-cover w-full h-auto max-h-[600px] hover:scale-105 transition-transform duration-300" loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
 
           {post.file_url && post.type === "video" && (
             <div className="relative w-full rounded-3xl overflow-hidden bg-slate-900 mt-2">
-              <video src={post.file_url} controls className="object-cover w-full max-h-[600px]" />
+              <video src={post.file_url.split(',')[0]} controls className="object-cover w-full max-h-[600px]" />
             </div>
           )}
 

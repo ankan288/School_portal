@@ -1,8 +1,13 @@
+"use client";
+
 import Link from 'next/link';
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
+  const { setAuthModalOpen } = useAuth();
+
   return (
-    <div className="absolute inset-0 bg-[#FAF9F5] w-full h-[100dvh] overflow-hidden font-sans flex flex-col justify-between z-50">
+    <div className="relative bg-[#FAF9F5] w-full min-h-[calc(100vh-4rem)] overflow-hidden font-sans flex flex-col justify-between">
       
       {/* Background World Map Vector (light gray silhouette) -> Using a placeholder blob shape for visual similarity */}
       <div className="absolute inset-0 pointer-events-none opacity-20 flex justify-end items-start mt-10">
@@ -34,9 +39,12 @@ export default function Home() {
             </p>
 
             <div className="mt-10 flex items-center gap-6">
-              <Link href="/announcements" className="bg-black text-white px-8 py-3.5 text-sm font-semibold hover:bg-slate-800 transition tracking-wide shadow-xl">
+              <button 
+                onClick={() => setAuthModalOpen(true)} 
+                className="bg-black text-white px-8 py-3.5 text-sm font-semibold hover:bg-slate-800 transition tracking-wide shadow-xl cursor-pointer"
+              >
                 Get Started
-              </Link>
+              </button>
               <Link href="#" className="group flex items-center gap-2 text-slate-900 text-sm font-semibold hover:opacity-75 transition">
                 Discover
                 <svg className="w-4 h-4 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
