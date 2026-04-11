@@ -51,10 +51,10 @@ export default function HomePage() {
   }, [direction]);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] pt-20 px-4 sm:px-6 lg:px-8 max-w-screen-xl mx-auto flex flex-col items-center">
+    <div className="min-h-[calc(100vh-4rem)] pt-4 flex flex-col items-center w-full overflow-x-hidden">
       
       {/* Image Carousel Panel */}
-      <div className="relative w-full h-[350px] sm:h-[450px] md:h-[550px] rounded-[2.5rem] overflow-hidden shadow-2xl group mt-8">
+      <div className="relative w-[98%] max-w-[1920px] h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] rounded-[1.5rem] overflow-hidden shadow-xl group mt-0">
         
         {/* Images */}
         {carouselImages.map((img, index) => (
