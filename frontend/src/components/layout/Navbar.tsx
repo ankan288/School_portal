@@ -9,6 +9,7 @@ export default function Navbar() {
   const { user, profile, setAuthModalOpen, signOut } = useAuth();
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,17 +35,32 @@ export default function Navbar() {
     <nav className="fixed w-full z-50 bg-[#FAF9F5] border-b border-slate-200 shadow-[0_4px_20px_-15px_rgba(0,0,0,0.1)] top-0 left-0">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex-shrink-0 flex items-center gap-2">     
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-[#f6ca15] font-black text-xl shadow-inner">
-              S
-            </div>
-            <span className="font-extrabold text-xl text-slate-900 tracking-tight cursor-pointer font-serif">
-              School<span className="text-[#65992b]">Portal</span>
-            </span>
-          </Link>
+          <div className="flex items-center">
+            {/* Hamburger Button for Mobile */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden inline-flex items-center justify-center p-2 mr-2 rounded-md text-slate-800 hover:bg-slate-200 focus:outline-none"
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? (
+                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              ) : (
+                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              )}
+            </button>
+
+            <Link href="/" className="flex-shrink-0 flex items-center gap-2">     
+              <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-[#f6ca15] font-black text-xl shadow-inner">
+                S
+              </div>
+              <span className="font-extrabold text-xl text-slate-900 tracking-tight cursor-pointer font-serif">
+                School<span className="text-[#65992b]">Portal</span>
+              </span>
+            </Link>
+          </div>
 
           <div className="hidden md:ml-6 md:flex md:space-x-8">
-            <Link href="/" className={getLinkClass("/")}>
+            <Link href="/home" className={getLinkClass("/home")}>
               Home
             </Link>
             <Link href="/about" className={getLinkClass("/about")}>
@@ -134,6 +150,37 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-[#FAF9F5] border-t border-slate-200 shadow-lg absolute w-full left-0 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="px-4 py-4 flex flex-col space-y-4">
+            <Link href="/home" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Home</Link>
+            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">About Us</Link>
+            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Contact Us</Link>
+            <Link href="/donate" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Donate</Link>
+            <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">News</Link>
+            <Link href="/announcements" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Announcements</Link>
+            <Link href="/galleries" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Event Galleries</Link>
+            
+            {profile?.role === "admin" && (
+              <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-[#d82c3c] font-bold hover:text-red-700">Admin Panel</Link>
+            )}
+            
+            {user && (
+              <div className="pt-4 border-t border-slate-200 flex flex-col space-y-4">
+                <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-slate-900">My Profile</Link>
+                {profile?.role === "admin" && (
+                  <Link href="/admin/content" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-slate-900">Manage Content</Link>
+                )}
+                <button onClick={() => { setIsMobileMenuOpen(false); signOut(); }} className="text-left text-red-600 font-bold hover:text-red-800">
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

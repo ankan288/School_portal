@@ -31,6 +31,12 @@ This project is organized as a monorepo setup:
 - **Content Publishing:** Easily upload new text notices, event gallery images, or video highlights directly to Supabase storage.
 - **Moderation Tools:** Manage all posts via a clean tabbed interface. Edit headlines, instantly delete abusive comments, or remove entire posts (which cascades to associated comments).
 
+### 5. Dedicated Home Page & Responsive Navigation (`/home`)
+- **Interactive Image Carousel:** A new dedicated homepage featuring a modern, auto-playing image slider with manual controls (dots and arrows) and rounded UI styling. Continuously loops through a diverse set of educational images.
+- **Call-to-Action Center:** Includes a "Helping Each Other Can Make The World Better" showcase section with prominent "Donate Now" and "Know About Us" buttons.
+- **Impact Story Preview:** A structured layout ready to display user impact stories.
+- **Mobile-Responsive Navbar:** An updated navigation bar featuring a mobile-friendly "Hamburger" dropdown menu. Gracefully handles desktop (horizontal links) and smartphone (vertical drawer) views, including conditional rendering for User Profile, Admin Panel, and Logout actions.
+
 ## 🛠️ Tech Stack
 - **Frontend Framework:** Next.js (React App Router)
 - **UI/Styling:** Tailwind CSS (with custom scrollbar plugins and arbitrary values)
