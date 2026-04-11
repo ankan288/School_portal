@@ -47,9 +47,9 @@ export default function ManageContentPage() {
 
   useEffect(() => {
     if (user && profile?.role === "admin") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       if (activeTab === "posts") { setTimeout(() => fetchPosts(), 0); }
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       else { setTimeout(() => fetchComments(), 0); }
     }
   }, [activeTab, user, profile]);

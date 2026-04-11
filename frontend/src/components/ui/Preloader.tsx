@@ -34,6 +34,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const [isExiting, setIsExiting] = useState(false)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDimension({ width: window.innerWidth, height: window.innerHeight })
   }, [])
 

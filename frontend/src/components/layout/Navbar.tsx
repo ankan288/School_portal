@@ -28,13 +28,13 @@ export default function Navbar() {
       isActive
         ? "border-slate-800 text-slate-900 font-bold"
         : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800 font-medium"
-    } inline-flex items-center px-1 pt-1 border-b-2 text-sm transition`;
+    } inline-flex items-center px-1 pt-1 border-b-2 text-base transition`;
   };
 
   return (
-    <nav className="fixed w-full z-50 bg-[#FAF9F5] border-b border-slate-200 shadow-[0_4px_20px_-15px_rgba(0,0,0,0.1)] top-0 left-0">
+    <nav className="bg-transparent w-full">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center py-3 min-h-[100px]">
           <div className="flex items-center">
             {/* Hamburger Button for Mobile */}
             <button
@@ -49,23 +49,35 @@ export default function Navbar() {
               )}
             </button>
 
-            <Link href="/" className="flex-shrink-0 flex items-center gap-2">     
-              <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-[#f6ca15] font-black text-xl shadow-inner">
+            <Link href="/" className="flex-shrink-0 flex flex-col items-center gap-1 group">     
+              <div className="w-14 h-14 bg-amber-600 rounded-sm flex items-center justify-center text-white font-black text-3xl shadow-sm">
                 S
               </div>
-              <span className="font-extrabold text-xl text-slate-900 tracking-tight cursor-pointer font-serif">
-                School<span className="text-[#65992b]">Portal</span>
+              <span className="font-bold text-sm text-slate-900 tracking-tight cursor-pointer font-serif">
+                SOBUJ <span className="text-[#65992b]">PATH</span>
               </span>
             </Link>
           </div>
 
           <div className="hidden md:ml-6 md:flex md:space-x-8">
-            <Link href="/home" className={getLinkClass("/home")}>
+            <Link href="/" className={getLinkClass("/")}>
               Home
             </Link>
             <Link href="/about" className={getLinkClass("/about")}>
               About
             </Link>
+            <div className="relative group flex items-center h-full pt-1 pb-1">
+              <span className={`cursor-pointer inline-flex items-center px-1 border-b-2 text-base transition border-transparent text-slate-500 group-hover:border-slate-300 group-hover:text-slate-800 font-medium`}>
+                Education
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </span>
+              <div className="absolute left-0 top-[100%] mt-[-4px] pt-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-white border border-slate-200 shadow-lg rounded-xl overflow-hidden py-2 flex flex-col">
+                  <Link href="/education/child" className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">Child Education</Link>
+                  <Link href="/education/mother" className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">Mother Education</Link>
+                </div>
+              </div>
+            </div>
             <Link href="/contact" className={getLinkClass("/contact")}>
               Contact Us
             </Link>
@@ -75,17 +87,15 @@ export default function Navbar() {
             <Link href="/news" className={getLinkClass("/news")}>
               News
             </Link>
+            <Link href="/awards" className={getLinkClass("/awards")}>
+              Awards
+            </Link>
             <Link href="/announcements" className={getLinkClass("/announcements")}>
               Announcements
             </Link>
             <Link href="/galleries" className={getLinkClass("/galleries")}>
               Event Galleries
             </Link>
-            {profile?.role === "admin" && (
-              <Link href="/admin" className={getLinkClass("/admin")}>
-                Admin Panel
-              </Link>
-            )}
           </div>
 
           <div className="flex items-center px-2 lg:px-0">
@@ -120,10 +130,17 @@ export default function Navbar() {
                       </Link>
 
                       {profile?.role === "admin" && (
-                        <Link href="/admin/content" onClick={() => setIsProfileOpen(false)} className="w-full px-4 py-2 flex items-center gap-3 hover:bg-slate-700/50 transition">
-                          <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.89 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.89l12.685-12.685z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 7.125L16.862 4.487" /></svg>
-                          <span>Manage Content</span>
-                        </Link>
+                        <>
+                          <Link href="/admin/content" onClick={() => setIsProfileOpen(false)} className="w-full px-4 py-2 flex items-center gap-3 hover:bg-slate-700/50 transition">
+                            <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.89 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.89l12.685-12.685z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 7.125L16.862 4.487" /></svg>
+                            <span>Manage Content</span>
+                          </Link>
+                          
+                          <Link href="/admin" onClick={() => setIsProfileOpen(false)} className="w-full px-4 py-2 flex items-center gap-3 hover:bg-slate-700/50 transition text-red-400 hover:text-red-300">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>Admin Panel</span>
+                          </Link>
+                        </>
                       )}
 
                       <button className="w-full px-4 py-2 mb-1 flex items-center gap-3 hover:bg-slate-700/50 transition border-b border-slate-700/50 pb-3">
@@ -155,24 +172,25 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-[#FAF9F5] border-t border-slate-200 shadow-lg absolute w-full left-0 max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="px-4 py-4 flex flex-col space-y-4">
-            <Link href="/home" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Home</Link>
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Home</Link>
             <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">About Us</Link>
+            <div className="flex flex-col space-y-2">
+              <span className="text-slate-800 font-bold">Education</span>
+              <div className="pl-4 flex flex-col space-y-2">
+                <Link href="/education/child" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-[#65992b]">Child Education</Link>
+                <Link href="/education/mother" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-[#65992b]">Mother Education</Link>
+              </div>
+            </div>
             <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Contact Us</Link>
             <Link href="/donate" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Donate</Link>
             <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">News</Link>
+            <Link href="/awards" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Awards</Link>
             <Link href="/announcements" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Announcements</Link>
             <Link href="/galleries" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Event Galleries</Link>
-            
-            {profile?.role === "admin" && (
-              <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-[#d82c3c] font-bold hover:text-red-700">Admin Panel</Link>
-            )}
             
             {user && (
               <div className="pt-4 border-t border-slate-200 flex flex-col space-y-4">
                 <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-slate-900">My Profile</Link>
-                {profile?.role === "admin" && (
-                  <Link href="/admin/content" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-slate-900">Manage Content</Link>
-                )}
                 <button onClick={() => { setIsMobileMenuOpen(false); signOut(); }} className="text-left text-red-600 font-bold hover:text-red-800">
                   Log out
                 </button>

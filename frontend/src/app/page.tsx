@@ -1,155 +1,423 @@
 "use client";
 
-import Link from 'next/link';
-import { useAuth } from "@/hooks/useAuth";
+import { useState, useEffect } from "react";
+import { HeroHighlight, Highlight } from "@/components/ui/HeroHighlight";
 
-export default function Home() {
-  const { setAuthModalOpen } = useAuth();
+interface CarouselItem {
+  image: string;
+  quote?: string;
+}
+
+const carouselData: CarouselItem[] = [
+  {
+    image: "/carousel/5c89428a-71ca-4a80-8767-7ba52bc24773.jpg",
+    quote: "Empowering next generations\nthrough quality education\nand modern facilities",
+  },
+  {
+    image: "/carousel/c482bda9-1f21-4027-a851-da12b07cfbe1.jpg",
+    quote: "Providing a vibrant and\nwelcoming environment\nfor every child to thrive",
+  },
+  {
+    image: "/carousel/fa4a69b5-48b2-4009-b1db-fd4d308e0ae5.jpg",
+    quote: "Building a brighter future\none student at a time\nwith care and compassion",
+  },
+  { 
+    image: "/carousel/97ae25fe-d2c9-4dc8-9943-455b680d289f.jpg" 
+  },
+  { 
+    image: "/carousel/e619076e-6012-4edc-bcff-c0ed083f6d0e.jpg" 
+  },
+];
+
+export default function HomePage() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => {
+      // Manual right arrow click behaves normally (wrapping)
+      return prev === carouselData.length - 1 ? 0 : prev + 1;
+    });
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => {
+      return prev === 0 ? carouselData.length - 1 : prev - 1;
+    });
+  };
+
+  // Auto-play the carousel (ping-pong: first to last, then last to first)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        if (direction === "forward") {
+          if (prevIndex === carouselData.length - 1) {
+            setDirection("backward");
+            return prevIndex - 1;
+          }
+          return prevIndex + 1;
+        } else {
+          if (prevIndex === 0) {
+            setDirection("forward");
+            return prevIndex + 1;
+          }
+          return prevIndex - 1;
+        }
+      });
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [direction]);
 
   return (
-    <div className="relative bg-[#FAF9F5] w-full min-h-[calc(100vh-4rem)] overflow-hidden font-sans flex flex-col justify-between">
-      
-      {/* Background World Map Vector (light gray silhouette) -> Using a placeholder blob shape for visual similarity */}
-      <div className="absolute inset-0 pointer-events-none opacity-20 flex justify-end items-start mt-10">
-        <svg viewBox="0 0 800 600" className="w-[800px] h-[600px] fill-current text-slate-400 opacity-50" xmlns="http://www.w3.org/2000/svg">
-           <path d="M547.4,196Q640,142,674,233.5Q708,325,658.5,416.5Q609,508,512.5,528Q416,548,300,539.5Q184,531,140,432Q96,333,141,232.5Q186,132,298.5,108.5Q411,85,454.8,250Z" transform="translate(-50 -50) scale(1.2)" />
-        </svg>
-      </div>
+    <div className="flex flex-col items-center w-full overflow-x-hidden">
 
-      {/* Main Content Area */}
-      <div className="max-w-screen-xl mx-auto px-6 sm:px-8 lg:px-12 w-full pt-8 relative z-10 flex-1 flex flex-col justify-center">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
-          
-          {/* Left Text Column */}
-          <div className="flex-1 max-w-xl z-20">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 leading-[1.1] tracking-tight relative font-serif">
-              A school where every <br />
-              <span className="relative inline-block mt-2">
-                child&apos;s potential
-                {/* Yellow Brush Underline */}
-                <svg className="absolute w-[105%] h-8 sm:h-12 -bottom-2 sm:-bottom-4 -left-2 text-[#f6ca15] -z-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 40" preserveAspectRatio="none">
-                  <path d="M5,25 Q50,15 150,22 T340,20 Q350,20 345,15 Q300,5 150,10 T10,15 Q0,15 5,25 Z" fill="currentColor" opacity="0.9" />
-                </svg>
-              </span> <br />
-              is unlocked today.
+      {/* =============================================
+           INTRO PANEL — Compact split layout
+           ============================================= */}
+      <section className="relative w-full bg-[#FAF9F5] text-slate-900 px-6 md:px-12 lg:px-16 py-6">
+        {/* Top accent bar */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 z-30" />
+
+        <div className="flex flex-col md:flex-row w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+
+          {/* LEFT — Branding column */}
+          <div className="flex flex-col items-center justify-center md:items-start md:w-[35%] px-8 md:px-10 lg:px-14 py-8 border-b md:border-b-0 md:border-r border-slate-200 bg-white">
+            <h1 className="text-3xl md:text-4xl font-black font-serif text-slate-900 tracking-tight leading-tight mb-1 text-center md:text-left">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">ONYO</span>{" "}
+              BHUBAN
             </h1>
+            <p className="text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-emerald-600 mt-1 text-center md:text-left">
+              Sobuj Path Mukto Bidyalay
+            </p>
+          </div>
+
+          {/* RIGHT — Text column */}
+          <HeroHighlight containerClassName="flex-1 px-8 md:px-10 lg:px-14 py-8 relative">
+            <div className="relative z-20">
+              <p className="text-sm md:text-base leading-relaxed text-slate-600 font-serif mb-3">
+                Close to Shantiniketan, Bolpur, in a little village called Ramnagar that comes on the way towards Ilambajar, I have built my{" "}
+                <Highlight className="text-slate-900 font-bold px-1.5">Onyo Bhuban</Highlight>{" "}
+                <span className="italic text-slate-500">(&apos;the other world&apos;)</span>.
+              </p>
+              <p className="text-sm md:text-base leading-relaxed text-slate-600 font-serif">
+                On 23rd January 2018, in{" "}
+                <strong className="text-slate-900">Onyo Bhuban&apos;s</strong> front yard took place the inaugural ceremony of{" "}
+                <Highlight className="text-emerald-900 font-bold px-1.5">Sobuj Path Mukto Bidyalay</Highlight>—a{" "}
+                <strong className="text-slate-900">free and non-formal centre of studies</strong> for the{" "}
+                <strong className="text-slate-900 border-b-2 border-emerald-200 pb-0.5">village children</strong>.
+              </p>
+            </div>
+          </HeroHighlight>
+        </div>
+      </section>
+
+      {/* Image Carousel Panel */}
+      <div className="w-full px-6 md:px-12 lg:px-16 pb-6 bg-[#FAF9F5]">
+      <div className="relative w-full overflow-hidden shadow-sm group rounded-xl bg-white" style={{aspectRatio: '16/9', minHeight: '350px', maxHeight: '650px'}}>
+        
+        {/* Images */}
+        {carouselData.map((item, index) => (
+          <div 
+            key={index} 
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
+          >
+            {/* Main Image */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src={item.image} 
+              alt={`Slide ${index + 1}`} 
+              className="w-full h-full object-cover object-center"
+            />
             
-            <p className="mt-8 text-slate-600 font-medium text-lg leading-relaxed max-w-sm">
-              Every day we provide world-class education, healthy environments, and modern facilities to cultivate tomorrow&apos;s scholars, and you can join us!
-            </p>
-
-            <div className="mt-10 flex items-center gap-6">
-              <button 
-                onClick={() => setAuthModalOpen(true)} 
-                className="bg-black text-white px-8 py-3.5 text-sm font-semibold hover:bg-slate-800 transition tracking-wide shadow-xl cursor-pointer"
-              >
-                Get Started
-              </button>
-              <Link href="#" className="group flex items-center gap-2 text-slate-900 text-sm font-semibold hover:opacity-75 transition">
-                Discover
-                <svg className="w-4 h-4 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Image/Graphic Column */}
-          <div className="flex-1 relative w-full max-w-md lg:max-w-lg min-h-[350px] lg:min-h-[400px]">
-            {/* Green Paint Splash Top Left */}
-            <div className="absolute -left-12 top-10 w-32 h-10 bg-[#65992b] transform -rotate-6 z-0 rounded-sm skew-x-12 opacity-90 blur-[1px]"></div>
-            <div className="absolute -left-14 top-16 w-20 h-6 bg-[#65992b] transform rotate-3 z-0 rounded-sm skew-x-[-10deg] opacity-80 blur-[2px]"></div>
-
-            {/* The Masque container for the image */}
-            <div className="absolute inset-0 z-10 drop-shadow-2xl">
-              {/* Using a clipping path approach */}
-              <div 
-                className="w-full h-full bg-cover bg-center bg-no-repeat shadow-2xl"
-                style={{ 
-                  backgroundImage: "url('https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2670&auto=format&fit=crop')",
-                  clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 75% 100%, 25% 100%, 0% 80%, 0% 20%)',
-                  borderRadius: '3rem', // Soften the polygon a bit
-                }}
-              ></div>
-            </div>
-
-            {/* Yellow / Green Paint Splash Bottom Center */}
-            <div className="absolute -bottom-6 left-10 w-44 h-12 bg-[#f6ca15] transform rotate-2 z-20 rounded ring-white skew-x-[15deg]"></div>
-            <div className="absolute -bottom-10 left-16 w-28 h-8 bg-[#65992b] transform -rotate-3 z-30 rounded-sm skew-x-12 opacity-90"></div>
-
-            {/* Floating Stat Widget */}
-            <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-30 flex flex-col items-center">
-              <div className="relative">
-                {/* Yellow circle behind */}
-                <div className="absolute -inset-4 bg-[#f6ca15] rounded-full z-0 transform -translate-x-2 translate-y-1"></div>
-                <h3 className="text-5xl font-serif font-black text-slate-900 relative z-10 drop-shadow-sm">1,200</h3>
+            {/* Conditional Quote Overlay Box */}
+            {item.quote && (
+              <div className="absolute top-[5%] left-[2%] md:top-[8%] md:left-[4%] max-w-[85%] md:max-w-xl bg-[#c28424]/30 backdrop-blur-md border border-white/20 text-white p-4 md:p-6 rounded-xl whitespace-pre-line shadow-2xl">
+                <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-snug tracking-tight drop-shadow-lg">
+                  {item.quote}
+                </p>
               </div>
-              <p className="text-xs font-medium text-slate-600 text-center mt-3 max-w-[100px] leading-tight">
-                students learning every day on campus
+            )}
+            
+            {/* Shadow overlay for better contrast if needed */}
+            <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
+          </div>
+        ))}
+
+        {/* Left Arrow */}
+        <button 
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
+          aria-label="Previous Slide"
+        >
+          <svg fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+
+        {/* Right Arrow */}
+        <button 
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
+          aria-label="Next Slide"
+        >
+          <svg fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+
+        {/* Dots indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+          {carouselData.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2.5 h-2.5 rounded-full transition-all ${
+                index === currentIndex ? "bg-white w-6" : "bg-white/50 hover:bg-white/80"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+      </div>
+
+      {/* =========================================
+           IMPACT METRICS SECTION 
+           ========================================= */}
+      <section className="py-24 bg-blue-900 text-white w-full mt-16 md:mt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="text-center md:flex md:items-center md:justify-between mb-16">
+            <div className="md:w-1/2 text-left">
+              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">
+                Our Global Impact
+              </h2>
+              <p className="text-xl text-blue-200">
+                We believe in the power of education to transform lives. Here is a snapshot of what we have achieved together over the past decade.
               </p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Bottom Icons Section */}
-      <div className="max-w-screen-xl mx-auto px-6 sm:px-8 lg:px-12 w-full pb-4 sm:pb-8 mt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
           
-          {/* Faded horizontal line behind the items */}
-          <div className="hidden lg:block absolute top-[25px] left-0 w-full h-[1px] bg-slate-200 z-0"></div>
-
-          {/* Item 1 */}
-          <div className="relative z-10 bg-[#FAF9F5] pt-2">
-            <div className="w-10 h-10 mb-4 text-slate-800 border-2 border-slate-900 rounded-lg flex items-center justify-center p-1.5 bg-white">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="bg-blue-800 rounded-xl p-8 text-center border border-blue-700 shadow-lg transform transition hover:-translate-y-2">
+              <p className="text-5xl font-black text-white mb-2">15k+</p>
+              <p className="text-blue-200 font-medium uppercase tracking-wide">Students Reached</p>
             </div>
-            <h4 className="font-bold text-slate-900 mb-2">Healthy Food</h4>
-            <p className="text-xs text-slate-500 leading-relaxed font-medium">
-              Nutritious meals prepared daily to fuel focused minds and strong bodies across our campus cafeterias.
-            </p>
-          </div>
-
-          {/* Item 2 - Highlighted */}
-          <div className="relative z-10 pt-2 lg:-mt-6">
-            <div className="absolute inset-0 bg-white shadow-xl rounded-xl -m-3 lg:-m-5 z-0"></div>
-            <div className="relative z-10 p-2">
-              <div className="w-10 h-10 mb-4 text-slate-800 border-2 border-slate-900 bg-[#f6ca15]/10 rounded-lg flex items-center justify-center p-1.5">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-              </div>
-              <h4 className="font-bold text-slate-900 mb-2 border-b-2 border-slate-900 pb-1 w-max relative">
-                Education
-                {/* Pointer Hand Icon overlay */}
-                <svg className="absolute -bottom-5 -right-6 w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
-              </h4>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium mt-3">
-                Modern curriculum led by dedicated professionals, ensuring every single student thrives academically.
-              </p>
+            <div className="bg-blue-800 rounded-xl p-8 text-center border border-blue-700 shadow-lg transform transition hover:-translate-y-2">
+              <p className="text-5xl font-black text-white mb-2">45</p>
+              <p className="text-blue-200 font-medium uppercase tracking-wide">Schools Built</p>
+            </div>
+            <div className="bg-blue-800 rounded-xl p-8 text-center border border-blue-700 shadow-lg transform transition hover:-translate-y-2">
+              <p className="text-5xl font-black text-white mb-2">250+</p>
+              <p className="text-blue-200 font-medium uppercase tracking-wide">Active Volunteers</p>
+            </div>
+            <div className="bg-blue-800 rounded-xl p-8 text-center border border-blue-700 shadow-lg transform transition hover:-translate-y-2">
+              <p className="text-5xl font-black text-white mb-2">$5M</p>
+              <p className="text-blue-200 font-medium uppercase tracking-wide">Funds Raised</p>
             </div>
           </div>
-
-          {/* Item 3 */}
-          <div className="relative z-10 bg-[#FAF9F5] pt-2">
-            <div className="w-10 h-10 mb-4 text-slate-800 border-2 border-slate-900 rounded-lg flex items-center justify-center p-1.5 bg-white">
-               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-            </div>
-            <h4 className="font-bold text-slate-900 mb-2">Safe Campus</h4>
-            <p className="text-xs text-slate-500 leading-relaxed font-medium">
-              Around-the-clock security and purely secure environments to ensure total peace of mind for parents.
-            </p>
-          </div>
-
-          {/* Item 4 */}
-          <div className="relative z-10 bg-[#FAF9F5] pt-2">
-            <div className="w-10 h-10 mb-4 text-slate-800 border-2 border-slate-900 rounded-lg flex items-center justify-center p-1.5 bg-white">
-               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-            </div>
-            <h4 className="font-bold text-slate-900 mb-2">Medical Care</h4>
-            <p className="text-xs text-slate-500 leading-relaxed font-medium">
-              Fully equipped on-site medical professional facilities to attend to any and all immediate student needs.
-            </p>
-          </div>
-
         </div>
-      </div>
+      </section>
+
+      {/* =========================================
+           SUCCESS STORIES SECTION 
+           ========================================= */}
+      <section className="py-24 bg-white w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Stories of Success</h2>
+            <div className="w-24 h-1 bg-blue-600 mx-auto rounded"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="flex flex-col md:flex-row bg-gray-50 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+              <div className="md:w-2/5 bg-gray-300 min-h-[200px]">
+                {/* Replace with actual image */}
+                <div className="w-full h-full flex items-center justify-center bg-blue-200">
+                   <span className="text-blue-500 font-semibold px-4 text-center">Student Portrait</span>
+                </div>
+              </div>
+              <div className="p-8 md:w-3/5 flex flex-col justify-center">
+                <svg className="w-8 h-8 text-blue-400 mb-4" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                  <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.896 3.456-8.352 9.12-8.352 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                </svg>
+                <p className="text-gray-700 italic mb-6">&quot;Before this scholarship, I couldn&apos;t afford college. Now, I am the first in my family to graduate and am pursuing a career in engineering.&quot;</p>
+                <div>
+                  <p className="font-bold text-gray-900">Sarah Jenkins</p>
+                  <p className="text-sm text-gray-500">Class of 2025</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row bg-gray-50 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+              <div className="md:w-2/5 bg-gray-300 min-h-[200px]">
+                {/* Replace with actual image */}
+                <div className="w-full h-full flex items-center justify-center bg-green-200">
+                   <span className="text-green-600 font-semibold px-4 text-center">Teacher Portrait</span>
+                </div>
+              </div>
+              <div className="p-8 md:w-3/5 flex flex-col justify-center">
+                <svg className="w-8 h-8 text-green-400 mb-4" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                   <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.896 3.456-8.352 9.12-8.352 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                </svg>
+                <p className="text-gray-700 italic mb-6">&quot;The new facility built by the foundation completely changed our ability to teach science. The kids are finally engaged with hands-on labs.&quot;</p>
+                <div>
+                  <p className="font-bold text-gray-900">David Martinez</p>
+                  <p className="text-sm text-gray-500">High School Science Teacher</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================
+           AWARDS & RECOGNITION SECTION 
+           ========================================= */}
+      <section className="py-24 bg-gray-50 border-t border-gray-200 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-12 border-b border-gray-200 pb-6">
+            <div>
+              <h2 className="text-3xl font-extrabold text-gray-900">Awards & Recognition</h2>
+              <p className="text-gray-600 mt-2">Honoring our commitment to community and education.</p>
+            </div>
+            <a href="/awards" className="hidden sm:inline-flex text-[#c28424] font-semibold hover:text-[#a06b1c] transition">
+              View All Awards &rarr;
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Award 1 */}
+            <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow text-center flex flex-col items-center">
+              <div className="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">NGO of the Year</h3>
+              <p className="text-sm text-gray-500 mb-4">2025 • National Community Service Board</p>
+              <p className="text-gray-600 text-sm">Awarded for outstanding contribution to free child education and community empowerment.</p>
+            </div>
+
+            {/* Award 2 */}
+            <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow text-center flex flex-col items-center">
+              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Excellence in Healthcare</h3>
+              <p className="text-sm text-gray-500 mb-4">2024 • Global Health Initiative</p>
+              <p className="text-gray-600 text-sm">Recognized for our expansive mother and child wellness programs in rural sectors.</p>
+            </div>
+
+            {/* Award 3 */}
+            <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow text-center flex flex-col items-center">
+              <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Community Impact Prize</h3>
+              <p className="text-sm text-gray-500 mb-4">2023 • Regional Development Fund</p>
+              <p className="text-gray-600 text-sm">Honored for creating sustainable rural development and education infrastructure.</p>
+            </div>
+          </div>
+          
+          <div className="mt-10 text-center sm:hidden">
+            <a href="/awards" className="inline-block bg-white text-[#c28424] font-semibold px-6 py-3 border border-[#c28424] rounded-lg hover:bg-[#fff9f0] transition">
+              View All Awards
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================
+           LATEST NEWS SECTION 
+           ========================================= */}
+      <section className="py-24 bg-white w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-12 border-b border-gray-200 pb-6">
+            <div>
+              <h2 className="text-3xl font-extrabold text-gray-900">Latest News & Updates</h2>
+              <p className="text-gray-600 mt-2">See what we&apos;ve been up to recently.</p>
+            </div>
+            <a href="/news" className="hidden sm:inline-flex text-blue-600 font-semibold hover:text-blue-800 transition">
+              View All News &rarr;
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Article 1 */}
+            <article className="flex flex-col group cursor-pointer">
+              <div className="rounded-xl overflow-hidden mb-4 bg-gray-200 h-60">
+                 {/* Placeholder for Image */}
+                 <div className="w-full h-full bg-indigo-100 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+                    <span className="text-indigo-400 font-medium">News Image 1</span>
+                 </div>
+              </div>
+              <div className="flex items-center text-sm text-gray-500 mb-2 space-x-4">
+                <span>April 10, 2026</span>
+                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">Events</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition mb-2">
+                Annual Fundraising Gala Breaks Previous Records
+              </h3>
+              <p className="text-gray-600 line-clamp-3">
+                Thanks to our generous donors and sponsors, this year&apos;s gala raised over $1.2 million to directly fund STEM programs in underprivileged districts across the country.
+              </p>
+            </article>
+
+            {/* Article 2 */}
+            <article className="flex flex-col group cursor-pointer">
+              <div className="rounded-xl overflow-hidden mb-4 bg-gray-200 h-60">
+                 {/* Placeholder for Image */}
+                 <div className="w-full h-full bg-green-100 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+                    <span className="text-green-500 font-medium">News Image 2</span>
+                 </div>
+              </div>
+              <div className="flex items-center text-sm text-gray-500 mb-2 space-x-4">
+                <span>March 28, 2026</span>
+                <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Announcements</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition mb-2">
+                New Partnership with Tech Innovators Inc.
+              </h3>
+              <p className="text-gray-600 line-clamp-3">
+                We are thrilled to announce a strategic partnership that will deliver 5,000 new laptops to high school juniors preparing for college applications this fall.
+              </p>
+            </article>
+
+            {/* Article 3 */}
+            <article className="flex flex-col group cursor-pointer">
+              <div className="rounded-xl overflow-hidden mb-4 bg-gray-200 h-60">
+                 {/* Placeholder for Image */}
+                 <div className="w-full h-full bg-pink-100 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+                    <span className="text-pink-400 font-medium">News Image 3</span>
+                 </div>
+              </div>
+              <div className="flex items-center text-sm text-gray-500 mb-2 space-x-4">
+                <span>March 15, 2026</span>
+                <span className="px-2 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-semibold">Community</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition mb-2">
+                Volunteers Complete Renovation of Riverdale Library
+              </h3>
+              <p className="text-gray-600 line-clamp-3">
+                Over 50 community members gave their weekend to paint, clean, and organize the newly restored learning center at Riverdale Elementary.
+              </p>
+            </article>
+          </div>
+          
+          <div className="mt-10 text-center sm:hidden">
+             <a href="/news" className="inline-block bg-white text-blue-600 font-semibold px-6 py-3 border border-blue-600 rounded-lg hover:bg-blue-50 transition">
+              View All News
+            </a>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

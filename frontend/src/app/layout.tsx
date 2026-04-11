@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "School Portal",
+  title: "SOBUJ PATH",
   description: "Web portal for school announcements and events",
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar />
           <AuthModal />
-          <main className="flex-1 w-full pt-16">
+          <main className="flex-1 w-full">
             {children}
           </main>
         </AuthProvider>
