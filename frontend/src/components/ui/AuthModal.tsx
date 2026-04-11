@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
+import Preloader from "./Preloader";
 
 export default function AuthModal() {
   const { isAuthModalOpen, setAuthModalOpen } = useAuth();
@@ -13,8 +14,14 @@ export default function AuthModal() {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPreloader, setShowPreloader] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("/");
 
-  if (!isAuthModalOpen) return null;
+  if (!isAuthModalOpen && !showPreloader) return null;
+
+  if (showPreloader) {
+    return <Preloader onComplete={() => (window.location.href = redirectUrl)} />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,11 +49,8 @@ export default function AuthModal() {
       setLoading(false);
       setAuthModalOpen(false);
 
-      if (isAdmin) {
-        window.location.href = "/admin";
-      } else {
-        window.location.href = "/";
-      }
+      setRedirectUrl(isAdmin ? "/admin" : "/");
+      setShowPreloader(true);
     }
   };
 
