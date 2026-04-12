@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
@@ -49,11 +50,16 @@ export default function Navbar() {
               )}
             </button>
 
-            <Link href="/" className="flex-shrink-0 flex flex-col items-center gap-1 group">     
-              <div className="w-14 h-14 bg-amber-600 rounded-sm flex items-center justify-center text-white font-black text-3xl shadow-sm">
-                S
-              </div>
-              <span className="font-bold text-sm text-slate-900 tracking-tight cursor-pointer font-serif">
+            <Link href="/" className="flex-shrink-0 flex flex-col items-center justify-center gap-1 group">     
+              <Image 
+                src="/logo/sobuj-path-logo.png" 
+                alt="Sobuj Path Mukto Bidyalay Logo" 
+                width={120} 
+                height={120} 
+                className="w-auto h-[65px] object-contain"
+                priority
+              />
+              <span className="font-bold text-[13px] text-slate-900 tracking-tight cursor-pointer font-serif leading-none">
                 SOBUJ <span className="text-[#65992b]">PATH</span>
               </span>
             </Link>
@@ -74,8 +80,7 @@ export default function Navbar() {
               <div className="absolute left-0 top-[100%] mt-[-4px] pt-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="bg-white border border-slate-200 shadow-lg rounded-xl overflow-hidden py-2 flex flex-col">
                   <Link href="/education/child" className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">Child Education</Link>
-                  <Link href="/education/mother" className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">Mother Education</Link>
-                </div>
+                  <Link href="/education/mother" className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">Mother Education</Link>                    <Link href="/education/teachers-and-support-staff" className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900">Teachers & Support Staff</Link>                </div>
               </div>
             </div>
             <Link href="/contact" className={getLinkClass("/contact")}>
@@ -178,8 +183,7 @@ export default function Navbar() {
               <span className="text-slate-800 font-bold">Education</span>
               <div className="pl-4 flex flex-col space-y-2">
                 <Link href="/education/child" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-[#65992b]">Child Education</Link>
-                <Link href="/education/mother" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-[#65992b]">Mother Education</Link>
-              </div>
+                <Link href="/education/mother" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-[#65992b]">Mother Education</Link>                  <Link href="/education/teachers-and-support-staff" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 font-medium hover:text-[#65992b]">Teachers & Support Staff</Link>              </div>
             </div>
             <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Contact Us</Link>
             <Link href="/donate" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-800 font-bold hover:text-[#65992b]">Donate</Link>
