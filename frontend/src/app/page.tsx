@@ -83,7 +83,7 @@ export default function HomePage() {
           {/* LEFT — Branding column */}
           <div className="flex flex-col items-center justify-center md:items-start md:w-[35%] px-8 md:px-10 lg:px-14 py-8 border-b md:border-b-0 md:border-r border-slate-200 bg-white">
             <h1 className="text-3xl md:text-4xl font-black font-serif text-slate-900 tracking-tight leading-tight mb-1 text-center md:text-left">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">ONYO</span>{" "}
+              <span className="text-[#65992b]">ONYO</span>{" "}
               BHUBAN
             </h1>
             <p className="text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-emerald-600 mt-1 text-center md:text-left">
