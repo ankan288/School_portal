@@ -32,7 +32,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-transparent w-full">
+    <nav className="sticky top-0 z-50 bg-white shadow-sm w-full">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-3 min-h-[100px]">
           <div className="flex items-center">
